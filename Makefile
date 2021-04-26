@@ -1,12 +1,19 @@
+PREFIX ?= /usr/local
+MANPREFIX ?= $(PREFIX)/share/man
 PKG_CONFIG ?= pkg-config
+SRC = src/lz4jsoncat.c
+TARGET = bin/lz4jsoncat
+
+PWD = $(shell pwd)
 CFLAGS := -g -O2 -Wall
 LDLIBS := $(shell $(PKG_CONFIG) --cflags --libs liblz4)
 
-bin/lz4jsoncat: src/lz4jsoncat.c
+$(TARGET): $(SRC)
 	mkdir -p bin
-	$(CC) $(CFLAGS) src/lz4jsoncat.c $(LDLIBS) -o bin/lz4jsoncat
+	$(CC) $(CFLAGS) $(SRC) $(LDLIBS) -o $(TARGET)
+	ln -s $(PWD)/$(TARGET) $(PREFIX)/$(TARGET)
 
 clean:
-	rm -rf bin
+	rm -rf bin $(PREFIX)/$(TARGET)
 
 .PHONY: clean
